@@ -97,7 +97,6 @@ function generateList() {
     productsList.innerHTML = '';
     productsList.appendChild(list);
     updateList();
-    console.log(products);
 }
 
 function changeStatus(index) {
