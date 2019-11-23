@@ -6,11 +6,9 @@ function Product(name, quantity) {
 
 let products = [];
 let localStorageString = localStorage.getItem('products');
-let currentList = products.slice();
 if (localStorageString !== null) {
     products = JSON.parse(localStorageString);
-    getProducts();
-    generateList(currentList);
+    generateList();
 }
 
 function addProduct() {
@@ -23,14 +21,12 @@ function addProduct() {
     if (name && quantity) {
         products.push(product);
     }
-    getProducts();
-    generateList(currentList);
+    generateList();
 }
 
-function removeProduct(index) { ///+
+function removeProduct(index) {
     products.splice(index,1);
-    getProducts();
-    generateList(products);
+    generateList();
 }
 
 function searchByName(value) {
@@ -39,25 +35,21 @@ function searchByName(value) {
     return a;
 }
 
-function updateList() { ////////////
+function updateList() {
     localStorage.setItem('products', JSON.stringify(products));
-    getProducts();
 }
 
-function generateList(currentList) {
-    getProducts();
+function generateList() {
     const list = document.createElement('ul');
     list.className = "list-group";
-    if (currentList) {
-
-        for (let productIndex in currentList) {
+        for (let productIndex in products) {
             const productEl = document.createElement('li');
             const name = document.createElement('span');
             const quantity = document.createElement('span');
             const status = document.createElement('span');
             const deleteProduct = document.createElement('button');
 
-            if (currentList[productIndex].mark !== 0) {
+            if (products[productIndex].mark !== 0) {
                 status.innerText = "Sold";
                 status.className = "statusIcon badge badge-danger col-2";
 
@@ -77,8 +69,8 @@ function generateList(currentList) {
             deleteProduct.id = "deleteProduct";
             productEl.id = "productEl";
 
-            name.innerText = currentList[productIndex].name;
-            quantity.innerText = JSON.stringify(currentList[productIndex].quantity);
+            name.innerText = products[productIndex].name;
+            quantity.innerText = JSON.stringify(products[productIndex].quantity);
             deleteProduct.innerText = "X";
 
             productEl.appendChild(name);
@@ -89,8 +81,6 @@ function generateList(currentList) {
             status.onclick = () => {
                 status.className = "statusIcon badge badge-danger col-2";
                 changeStatus(productIndex);
-                getProducts();
-                generateList(currentList);
             };
 
             deleteProduct.onclick = () => {
@@ -99,7 +89,6 @@ function generateList(currentList) {
 
             list.appendChild(productEl);
         }
-    }
     const productsList = document.getElementById('productsList');
     productsList.innerHTML = '';
     productsList.appendChild(list);
@@ -108,13 +97,7 @@ function generateList(currentList) {
 
 function changeStatus(index) {
     products[index].mark = 1;
-    generateList(products);
-    updateList();
-
-}
-
-function getProducts() {
-    currentList = products.slice();
+    generateList();
 }
 
 function sortForm() {
@@ -134,17 +117,17 @@ function sortForm() {
 
     sortLowToHigh.onclick = () => {
         products.sort((a, b) => a.quantity > b.quantity ? 1 : -1);
-        generateList(products);
+        generateList();
     };
 
     sortHighToLow.onclick = () => {
         products.sort((a, b) => a.quantity < b.quantity ? 1 : -1);
-        generateList(products);
+        generateList();
     };
 
     listByDefault.onclick = () => {
         products.sort(() => Math.random() - 0.5);
-        generateList(products);
+        generateList();
     };
 
     dropdownMenu.appendChild(sortLowToHigh);
@@ -211,5 +194,4 @@ function searchForm() {
 searchForm();
 inputForm();
 sortForm();
-generateList(products);
-
+generateList();
